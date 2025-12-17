@@ -4,9 +4,9 @@ An [Obsidian](https://obsidian.md) plugin that lets you search for video games u
 
 ## Credits and Alternatives
 
-This plugin is heavily inspired by and based on [obsidian-book-search-plugin](https://github.com/anpigon/obsidian-book-search-plugin) by anpigon. The architecture, templating system, and settings patterns are adapted from that excellent plugin.
+This plugin is flat out copied from [obsidian-book-search-plugin](https://github.com/anpigon/obsidian-book-search-plugin) by [anpigon](https://github.com/anpigon). The only difference is that this one uses the IGDB API and populates game notes instead.
 
-If you're looking for alternatives, check out [obsidian-game-search-plugin](https://github.com/CMorooney/obsidian-game-search-plugin) by CMorooney, which uses a different game database API.
+If you're looking for alternatives, check out [obsidian-game-search-plugin](https://github.com/CMorooney/obsidian-game-search-plugin) by [CMorooney](https://github.com/CMorooney).
 
 ## Features
 
@@ -38,19 +38,8 @@ This plugin requires IGDB API credentials from Twitch. The IGDB API is free to u
 
 ## Installation
 
-### From Obsidian Community Plugins
-
-1. Open Obsidian Settings
-2. Go to Community Plugins and disable Safe Mode
-3. Click Browse and search for "IGDB Game Search"
-4. Install the plugin and enable it
-
-### Manual Installation
-
-1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/drmohundro/obsidian-igdb-game-search-plugin/releases)
-2. Create a folder called `igdb-game-search-plugin` in your vault's `.obsidian/plugins/` directory
-3. Copy the downloaded files into this folder
-4. Restart Obsidian and enable the plugin in Settings > Community Plugins
+I haven't configured any releases or set this up yet, though I'm willing to. At the
+moment, I set this up for myself.
 
 ## Usage
 
