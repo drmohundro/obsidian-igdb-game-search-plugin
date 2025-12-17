@@ -1,94 +1,199 @@
-# Obsidian Sample Plugin
+# IGDB Game Search for Obsidian
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+An [Obsidian](https://obsidian.md) plugin that lets you search for video games using the [IGDB](https://www.igdb.com/) (Internet Game Database) API and create notes with game metadata.
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## Credits and Alternatives
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+This plugin is heavily inspired by and based on [obsidian-book-search-plugin](https://github.com/anpigon/obsidian-book-search-plugin) by anpigon. The architecture, templating system, and settings patterns are adapted from that excellent plugin.
 
-## First time developing plugins?
+If you're looking for alternatives, check out [obsidian-game-search-plugin](https://github.com/CMorooney/obsidian-game-search-plugin) by CMorooney, which uses a different game database API.
 
-Quick starting guide for new plugin devs:
+## Features
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+- Search for games using the IGDB database
+- Create notes with game metadata (title, developer, publisher, release date, genres, platforms, etc.)
+- Customizable note templates with variable substitution
+- Cover image display in search results
+- Optional automatic cover image download and local storage
+- Customizable file naming and folder organization
+- Integration with [Templater](https://github.com/SilentVoid13/Templater) plugin
 
-## Releasing new releases
+## Requirements
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+This plugin requires IGDB API credentials from Twitch. The IGDB API is free to use.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+### Getting API Credentials
 
-## Adding your plugin to the community plugin list
+1. Go to the [Twitch Developer Console](https://dev.twitch.tv/console)
+2. Log in with your Twitch account (create one if needed)
+3. Click "Register Your Application"
+4. Fill in the application details:
+   - Name: Any name (e.g., "Obsidian Game Search")
+   - OAuth Redirect URLs: `http://localhost`
+   - Category: Application Integration
+5. Click "Create"
+6. Click "Manage" on your new application
+7. Copy the **Client ID**
+8. Click "New Secret" to generate a **Client Secret** (save this securely)
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+## Installation
 
-## How to use
+### From Obsidian Community Plugins
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+1. Open Obsidian Settings
+2. Go to Community Plugins and disable Safe Mode
+3. Click Browse and search for "IGDB Game Search"
+4. Install the plugin and enable it
 
-## Manually installing the plugin
+### Manual Installation
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+1. Download `main.js`, `manifest.json`, and `styles.css` from the [latest release](https://github.com/drmohundro/obsidian-igdb-game-search-plugin/releases)
+2. Create a folder called `igdb-game-search-plugin` in your vault's `.obsidian/plugins/` directory
+3. Copy the downloaded files into this folder
+4. Restart Obsidian and enable the plugin in Settings > Community Plugins
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
+## Usage
 
-## Funding URL
+### Creating a Game Note
 
-You can include funding URLs where people who use your plugin can financially support it.
+1. Click the gamepad icon in the left ribbon, or
+2. Use the command palette (`Ctrl/Cmd + P`) and search for "Create new game note"
+3. Enter a game title to search
+4. Select a game from the search results
+5. A new note will be created with the game metadata
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+### Inserting Metadata into Existing Notes
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+1. Open the note where you want to insert game metadata
+2. Use the command palette and search for "Insert game metadata"
+3. Search and select a game
+4. The metadata will be inserted at the beginning of the note
+
+## Settings
+
+### General Settings
+
+| Setting | Description |
+|---------|-------------|
+| New file location | Folder where new game notes will be created |
+| New file name | Template for naming new files. Available variables: `{{name}}`, `{{developer}}`, `{{releaseYear}}`, `{{DATE}}` |
+| Template file | Path to a template file for new game notes |
+
+### IGDB API Settings
+
+| Setting | Description |
+|---------|-------------|
+| Client ID | Your Twitch/IGDB Client ID |
+| Client Secret | Your Twitch/IGDB Client Secret |
+| Test Connection | Button to verify your API credentials |
+
+### UI Settings
+
+| Setting | Description |
+|---------|-------------|
+| Open new game note | Automatically open notes after creation |
+| Show cover images in search | Display cover art in search results |
+
+### Cover Image Settings
+
+| Setting | Description |
+|---------|-------------|
+| Save cover images locally | Download and save cover images to your vault |
+| Cover image path | Folder where cover images will be saved |
+
+## Templates
+
+You can create custom templates for your game notes. Templates support variable substitution using the `{{variableName}}` syntax.
+
+### Available Template Variables
+
+| Variable | Description |
+|----------|-------------|
+| `{{name}}` | Game title |
+| `{{slug}}` | URL-friendly game name |
+| `{{releaseDate}}` | Release date (YYYY-MM-DD format) |
+| `{{releaseYear}}` | Release year |
+| `{{developer}}` | Primary developer |
+| `{{developers}}` | All developers (array) |
+| `{{publisher}}` | Primary publisher |
+| `{{publishers}}` | All publishers (array) |
+| `{{genres}}` | Genres (array) |
+| `{{genresFormatted}}` | Genres as formatted string |
+| `{{gameModes}}` | Game modes (array) |
+| `{{gameModesFormatted}}` | Game modes as formatted string |
+| `{{platforms}}` | Platforms (array) |
+| `{{platformsFormatted}}` | Platforms as formatted string |
+| `{{coverUrl}}` | Cover image URL (thumbnail) |
+| `{{coverSmallUrl}}` | Small cover image URL |
+| `{{coverBigUrl}}` | Large cover image URL |
+| `{{localCoverImage}}` | Path to locally saved cover image |
+| `{{summary}}` | Game summary |
+| `{{storyline}}` | Game storyline |
+| `{{rating}}` | IGDB user rating (0-100) |
+| `{{aggregatedRating}}` | Aggregated critic rating (0-100) |
+| `{{url}}` | IGDB page URL |
+| `{{websiteUrl}}` | Official game website URL |
+
+### Date/Time Variables
+
+| Variable | Description |
+|----------|-------------|
+| `{{date}}` | Current date (YYYY-MM-DD) |
+| `{{date:format}}` | Current date with custom format |
+| `{{date+1d}}` | Tomorrow |
+| `{{date-1w}}` | One week ago |
+
+### Inline Scripts
+
+You can use inline JavaScript expressions with the `<%=expression%>` syntax:
+
+```
+Rating: <%=game.rating ? game.rating + '/100' : 'N/A'%>
 ```
 
-If you have multiple URLs, you can also do:
+### Example Template
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
+```markdown
+---
+title: "{{name}}"
+developer: "{{developer}}"
+publisher: "{{publisher}}"
+releaseDate: {{releaseDate}}
+genres: {{genres}}
+platforms: {{platforms}}
+rating: {{rating}}
+status: backlog
+---
+
+# {{name}}
+
+![cover]({{coverBigUrl}})
+
+## Summary
+
+{{summary}}
+
+## My Notes
+
+
 ```
 
-## API Documentation
+## Development
 
-See https://github.com/obsidianmd/obsidian-api
+```bash
+# Clone the repository
+git clone https://github.com/drmohundro/obsidian-igdb-game-search-plugin.git
+
+# Install dependencies
+npm install
+
+# Build for development (watch mode)
+npm run dev
+
+# Build for production
+npm run build
+```
+
+## License
+
+MIT

@@ -1,8 +1,81 @@
-/*
+/* Game Search Plugin Styles */
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+/* Settings */
+.game-search-plugin__settings h2 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
 
-If your plugin does not need CSS, delete this file.
+/* Search Modal */
+.game-search-plugin__search-modal--input {
+  margin-bottom: 1em;
+}
 
-*/
+.game-search-plugin__search-modal--input input {
+  width: 100%;
+}
+
+/* Game Suggestion Items */
+.game-suggestion-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 4px;
+}
+
+.game-cover-image {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.game-text-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.game-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-details {
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-platforms {
+  color: var(--text-faint);
+  font-size: 0.85em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Suggestion Container */
+.suggestion-container {
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  max-height: 300px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.suggestion-item:hover,
+.suggestion-item.is-selected {
+  background: var(--background-modifier-hover);
+}
