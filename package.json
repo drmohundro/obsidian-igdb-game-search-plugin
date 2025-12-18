@@ -1,6 +1,6 @@
 {
   "name": "obsidian-igdb-game-search-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Obsidian plugin to search for video games using IGDB and create notes.",
   "main": "main.js",
   "scripts": {
