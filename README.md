@@ -1,10 +1,10 @@
 # IGDB Game Search for Obsidian
 
-An [Obsidian](https://obsidian.md) plugin that lets you search for video games using the [IGDB](https://www.igdb.com/) (Internet Game Database) API and create notes with game metadata.
+An [Obsidian](https://obsidian.md) plugin that lets you search for video games using the [IGDB](https://www.igdb.com/) (Internet Game Database) API and create templated notes with game metadata.
 
 ## Credits and Alternatives
 
-This plugin is flat out copied from [obsidian-book-search-plugin](https://github.com/anpigon/obsidian-book-search-plugin) by [anpigon](https://github.com/anpigon). The only difference is that this one uses the IGDB API and populates game notes instead.
+This plugin is almost entirely based on [obsidian-book-search-plugin](https://github.com/anpigon/obsidian-book-search-plugin) by [anpigon](https://github.com/anpigon). The only difference is that this one uses the IGDB API and populates game notes instead.
 
 If you're looking for alternatives, check out [obsidian-game-search-plugin](https://github.com/CMorooney/obsidian-game-search-plugin) by [CMorooney](https://github.com/CMorooney).
 
@@ -17,6 +17,16 @@ If you're looking for alternatives, check out [obsidian-game-search-plugin](http
 - Optional automatic cover image download and local storage
 - Customizable file naming and folder organization
 - Integration with [Templater](https://github.com/SilentVoid13/Templater) plugin
+
+## Screenshots
+
+![Searching for a game](https://gist.github.com/user-attachments/assets/da6156b4-3f8b-4ce3-aa36-4320ed18d915)
+
+![Search Results](https://gist.github.com/user-attachments/assets/51cdbf83-f810-4189-8f5e-16323489efd5)
+
+![Automatic Note Creation](https://gist.github.com/user-attachments/assets/22c09984-3486-4dc2-86c7-b6acc50b6f1f)
+
+![Automatic Note Creation](https://gist.github.com/user-attachments/assets/a7587a86-d207-4dfc-8acc-02433639c3e8)
 
 ## Requirements
 
@@ -38,8 +48,7 @@ This plugin requires IGDB API credentials from Twitch. The IGDB API is free to u
 
 ## Installation
 
-I haven't configured any releases or set this up yet, though I'm willing to. At the
-moment, I set this up for myself.
+Search for this in the Obsidian Community Plugins or use [BRAT](https://github.com/TfTHacker/obsidian42-brat).
 
 ## Usage
 
@@ -144,26 +153,51 @@ Rating: <%=game.rating ? game.rating + '/100' : 'N/A'%>
 
 ```markdown
 ---
-title: "{{name}}"
-developer: "{{developer}}"
-publisher: "{{publisher}}"
+tags: 🎮Game
+id: {{id}}
+name: "{{name}}"
 releaseDate: {{releaseDate}}
-genres: {{genres}}
-platforms: {{platforms}}
+releaseYear: {{releaseYear}}
+developer: "{{developer}}"
+developers: [{{developers}}]
+publisher: "{{publisher}}"
+publishers: [{{publishers}}]
+developerLogo: {{developerLogo}}
+genres: [{{genres}}]
+gameModes: [{{gameModes}}]
+platforms: [{{platforms}}]
+cover: {{coverUrl}}
+coverSmallUrl: {{coverSmallUrl}}
+coverBigUrl: {{coverBigUrl}}
+localCover: {{localCoverImage}}
 rating: {{rating}}
-status: backlog
+ratingCount: {{ratingCount}}
+aggregatedRating: {{aggregatedRating}}
+aggregatedRatingCount: {{aggregatedRatingCount}}
+url: {{url}}
+websiteUrl: {{websiteUrl}}
+game-status: backlog
+created: {{ DATE:YYYY-MM-DD HH:mm:ss }}
+updated: {{ DATE:YYYY-MM-DD HH:mm:ss }}
 ---
 
 # {{name}}
 
-![cover]({{coverBigUrl}})
-
 ## Summary
 
-{{summary}}
+> {{summary}}
 
-## My Notes
+## Storyline
 
+> {{storyline}}
+
+## Notes
+
+
+## What I Liked
+
+
+## What I Didn't Like
 
 ```
 
