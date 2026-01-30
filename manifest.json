@@ -1,10 +1,10 @@
 {
-  "id": "igdb-game-search",
-  "name": "IGDB Game Search",
-  "version": "0.1.2",
-  "minAppVersion": "0.15.0",
-  "description": "Automatically create templated notes for video games from an IGDB-based API search.",
-  "author": "David Mohundro",
-  "authorUrl": "https://mohundro.com",
-  "isDesktopOnly": false
+	"id": "igdb-game-search",
+	"name": "IGDB Game Search",
+	"version": "0.1.3",
+	"minAppVersion": "0.15.0",
+	"description": "Automatically create templated notes for video games from an IGDB-based API search.",
+	"author": "David Mohundro",
+	"authorUrl": "https://mohundro.com",
+	"isDesktopOnly": false
 }
