@@ -52,7 +52,7 @@ export default class GameSearchPlugin extends Plugin {
     // This adds a settings tab so the user can configure various aspects of the plugin
     this.addSettingTab(new GameSearchSettingTab(this.app, this))
 
-    console.log(
+    console.debug(
       `Game Search: version ${this.manifest.version} (requires obsidian ${this.manifest.minAppVersion})`
     )
   }
@@ -69,7 +69,7 @@ export default class GameSearchPlugin extends Plugin {
         this.settings.tokenData,
         (tokenData: IGDBTokenData) => {
           this.settings.tokenData = tokenData
-          this.saveSettings()
+          void this.saveSettings()
         }
       )
     }
@@ -78,7 +78,12 @@ export default class GameSearchPlugin extends Plugin {
 
   showNotice(message: unknown) {
     try {
-      new Notice(String(message ?? 'An error occurred'))
+      const messageStr = message instanceof Error
+        ? message.message
+        : typeof message === 'string'
+        ? message
+        : 'An error occurred'
+      new Notice(messageStr)
     } catch {
       // ignore
     }
@@ -211,7 +216,7 @@ export default class GameSearchPlugin extends Plugin {
   async createNewGameNote(): Promise<void> {
     // Validate API credentials
     if (!this.settings.clientId || !this.settings.clientSecret) {
-      new Notice('Please configure your IGDB API credentials in settings first.')
+      new Notice('Configure IGDB API credentials in settings first')
       return
     }
 
@@ -236,7 +241,7 @@ export default class GameSearchPlugin extends Plugin {
 
       // If using Templater plugin
       await useTemplaterPluginInFile(this.app, targetFile)
-      this.openNewGameNote(targetFile)
+      void this.openNewGameNote(targetFile)
     } catch (err) {
       console.warn(err)
       this.showNotice(err)
@@ -254,7 +259,7 @@ export default class GameSearchPlugin extends Plugin {
 
     await activeLeaf.openFile(targetFile, { state: { mode: 'source' } })
     activeLeaf.setEphemeralState({ rename: 'all' })
-    await new CursorJumper(this.app).jumpToNextCursorLocation()
+    new CursorJumper(this.app).jumpToNextCursorLocation()
   }
 
   async openGameSearchModal(query = ''): Promise<Game[]> {
@@ -272,7 +277,13 @@ export default class GameSearchPlugin extends Plugin {
         this.settings.showCoverImageInSearch,
         games,
         (error, selectedGame) => {
-          return error ? reject(error) : resolve(selectedGame!)
+          if (error) {
+            return reject(error)
+          }
+          if (!selectedGame) {
+            return reject(new Error('No game selected'))
+          }
+          return resolve(selectedGame)
         }
       ).open()
     })
