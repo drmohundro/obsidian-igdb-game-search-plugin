@@ -86,9 +86,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createHeader(title: string, containerEl: HTMLElement): Setting {
-    const header = document.createDocumentFragment();
-    header.createEl('h2', { text: title });
-    return new Setting(containerEl).setHeading().setName(header);
+    return new Setting(containerEl).setName(title).setHeading();
   }
 
   private createFileLocationSetting(containerEl: HTMLElement): void {
@@ -101,11 +99,11 @@ export class GameSearchSettingTab extends PluginSettingTab {
         } catch (e) {
           console.error(e);
         }
-        cb.setPlaceholder('Example: Games')
+        cb.setPlaceholder('Example: games')
           .setValue(this.plugin.settings.folder)
           .onChange(newFolder => {
             this.plugin.settings.folder = newFolder;
-            this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           });
       });
   }
@@ -124,7 +122,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
           .setValue(this.plugin.settings.fileNameFormat)
           .onChange(newValue => {
             this.plugin.settings.fileNameFormat = newValue?.trim();
-            this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           });
       });
   }
@@ -146,11 +144,11 @@ export class GameSearchSettingTab extends PluginSettingTab {
         } catch (e) {
           console.error(e);
         }
-        cb.setPlaceholder('Example: templates/game-template')
+        cb.setPlaceholder('Example: templates/game template')
           .setValue(this.plugin.settings.templateFile)
           .onChange(newTemplateFile => {
             this.plugin.settings.templateFile = newTemplateFile;
-            this.plugin.saveSettings();
+            void this.plugin.saveSettings();
           });
       });
   }
@@ -158,27 +156,27 @@ export class GameSearchSettingTab extends PluginSettingTab {
   private createApiDescription(containerEl: HTMLElement): void {
     const desc = document.createDocumentFragment();
     desc.createDiv({
-      text: 'To use this plugin, you need IGDB API credentials from Twitch.',
+      text: 'To use this plugin, you need IGDB API credentials from Twitch',
     });
     desc.createEl('br');
     desc.createEl('a', {
-      text: '1. Go to Twitch Developer Console',
+      text: 'Go to Twitch developer console',
       href: 'https://dev.twitch.tv/console',
     });
     desc.createEl('br');
     desc.createDiv({ text: '2. Create a new application' });
-    desc.createDiv({ text: '3. Copy your Client ID and generate a Client Secret' });
+    desc.createDiv({ text: '3. Copy your client ID and generate a client secret' });
 
-    new Setting(containerEl).setName('Setup Instructions').setDesc(desc);
+    new Setting(containerEl).setName('Setup instructions').setDesc(desc);
   }
 
   private createClientIdSetting(containerEl: HTMLElement): void {
     new Setting(containerEl)
       .setName('Client ID')
-      .setDesc('Your Twitch/IGDB Client ID')
+      .setDesc('Your Twitch/IGDB client ID')
       .addText(text => {
         text
-          .setPlaceholder('Enter Client ID')
+          .setPlaceholder('Enter client ID')
           .setValue(this.plugin.settings.clientId)
           .onChange(async value => {
             this.plugin.settings.clientId = value.trim();
@@ -189,12 +187,12 @@ export class GameSearchSettingTab extends PluginSettingTab {
 
   private createClientSecretSetting(containerEl: HTMLElement): void {
     new Setting(containerEl)
-      .setName('Client Secret')
-      .setDesc('Your Twitch/IGDB Client Secret (stored locally)')
+      .setName('Client secret')
+      .setDesc('Your Twitch/IGDB client secret (stored locally)')
       .addText(text => {
         text.inputEl.type = 'password';
         text
-          .setPlaceholder('Enter Client Secret')
+          .setPlaceholder('Enter client secret')
           .setValue(this.plugin.settings.clientSecret)
           .onChange(async value => {
             this.plugin.settings.clientSecret = value.trim();
@@ -207,12 +205,12 @@ export class GameSearchSettingTab extends PluginSettingTab {
 
   private createApiTestSetting(containerEl: HTMLElement): void {
     new Setting(containerEl)
-      .setName('Test API Connection')
+      .setName('Test API connection')
       .setDesc('Verify your API credentials are working')
       .addButton(button => {
-        button.setButtonText('Test Connection').onClick(async () => {
+        button.setButtonText('Test connection').onClick(async () => {
           if (!this.plugin.settings.clientId || !this.plugin.settings.clientSecret) {
-            new Notice('Please enter both Client ID and Client Secret first.');
+            new Notice('Please enter both client ID and client secret first');
             return;
           }
 
@@ -222,12 +220,12 @@ export class GameSearchSettingTab extends PluginSettingTab {
           try {
             const api = this.plugin.getApi();
             await api.authenticate();
-            new Notice('API connection successful!');
+            new Notice('API connection successful');
           } catch (error) {
             new Notice(`API connection failed: ${error}`);
           } finally {
             button.setDisabled(false);
-            button.setButtonText('Test Connection');
+            button.setButtonText('Test connection');
           }
         });
       });
@@ -279,7 +277,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
         } catch (e) {
           console.error(e);
         }
-        cb.setPlaceholder('Example: Assets/GameCovers')
+        cb.setPlaceholder('Example: assets/game covers')
           .setValue(this.plugin.settings.coverImagePath)
           .onChange(async value => {
             this.plugin.settings.coverImagePath = value.trim();

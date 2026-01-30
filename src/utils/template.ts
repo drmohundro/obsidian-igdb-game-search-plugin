@@ -47,19 +47,11 @@ export function applyTemplateTransformations(rawTemplateContents: string): strin
 
 export function executeInlineScriptsTemplates(game: Game, text: string): string {
   const commandRegex = /<%(?:=)(.+)%>/g;
-  const ctor = getFunctionConstructor();
   const matchedList = [...text.matchAll(commandRegex)];
 
   return matchedList.reduce((result, [matched, script]) => {
     try {
-      const outputs = new ctor(
-        [
-          'const [game] = arguments',
-          `const output = ${script}`,
-          'if(typeof output === "string") return output',
-          'return JSON.stringify(output)',
-        ].join(';')
-      )(game);
+      const outputs = evaluateTemplateExpression(script, game);
       return result.replace(matched, outputs);
     } catch (err) {
       console.warn('Template script error:', err);
@@ -68,21 +60,39 @@ export function executeInlineScriptsTemplates(game: Game, text: string): string 
   }, text);
 }
 
-function getFunctionConstructor(): typeof Function {
-  try {
-    return new Function('return (function(){}).constructor')();
-  } catch (err) {
-    console.warn(err);
-    if (err instanceof SyntaxError) {
-      throw Error('Bad template syntax');
-    } else {
-      throw err;
+function evaluateTemplateExpression(script: string, game: Game): string {
+  // Evaluate simple property access patterns without Function constructor
+  // Supports: game.property, game.property.join(', ')
+  const trimmedScript = script.trim();
+
+  // Support simple property access: game.property
+  const simplePropertyMatch = trimmedScript.match(/^game\.(\w+)$/);
+  if (simplePropertyMatch) {
+    const prop = simplePropertyMatch[1];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic property access for template evaluation
+    const value = (game as any)[prop];
+    return typeof value === 'string' ? value : JSON.stringify(value);
+  }
+
+  // Support array join: game.property.join(', ') or game.property.join(", ")
+  const joinMatch = trimmedScript.match(/^game\.(\w+)\.join\(['"](.+?)['"]\)$/);
+  if (joinMatch) {
+    const prop = joinMatch[1];
+    const separator = joinMatch[2];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic property access for template evaluation
+    const value = (game as any)[prop];
+    if (Array.isArray(value)) {
+      return value.join(separator);
     }
   }
+
+  // For unsupported expressions, return empty string with warning
+  console.warn('Template expression not supported (limited to simple property access and join):', trimmedScript);
+  return '';
 }
 
 export async function useTemplaterPluginInFile(app: App, file: TFile): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Templater plugin API is not exposed in Obsidian types
   const templater = (app as any).plugins.plugins['templater-obsidian'];
   if (templater && !templater?.settings['trigger_on_file_creation']) {
     await templater.templater.overwrite_file_commands(file);

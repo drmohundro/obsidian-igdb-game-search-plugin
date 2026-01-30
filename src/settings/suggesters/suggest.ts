@@ -103,8 +103,10 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     this.scope = new Scope();
 
     this.suggestEl = createDiv('suggestion-container');
-    this.suggestEl.style.position = 'absolute';
-    this.suggestEl.style.zIndex = '1000';
+    this.suggestEl.setCssProps({
+      position: 'absolute',
+      'z-index': '1000'
+    });
 
     const suggestion = this.suggestEl.createDiv('suggestion');
     this.suggest = new Suggest(this, suggestion, this.scope);
@@ -140,7 +142,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
   }
 
   open(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Obsidian's keymap API is not exposed in public types
     (this.app as any).keymap.pushScope(this.scope);
 
     // Position the suggest container below the input
@@ -153,7 +155,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
   }
 
   close(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Obsidian's keymap API is not exposed in public types
     (this.app as any).keymap.popScope(this.scope);
 
     this.suggest.setSuggestions([]);

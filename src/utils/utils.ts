@@ -68,7 +68,12 @@ export function applyDefaultFrontMatter(
     typeof frontmatter === 'string' ? parseFrontMatter(frontmatter) : frontmatter;
 
   for (const key in extraFrontMatter) {
-    const value = String(extraFrontMatter[key] ?? '').trim();
+    const rawValue = extraFrontMatter[key];
+    // Skip objects and only process primitives
+    if (rawValue !== null && typeof rawValue === 'object' && !Array.isArray(rawValue)) {
+      continue;
+    }
+    const value = String(rawValue ?? '').trim();
     if (frontMatter[key] && frontMatter[key] !== value) {
       frontMatter[key] = `${frontMatter[key]}, ${value}`;
     } else {
@@ -117,6 +122,11 @@ export function toStringFrontMatter(frontMatter: Record<string, unknown>): strin
           return `"${str.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
         });
         return `${key}: [${escaped.join(', ')}]`;
+      }
+
+      // Skip non-primitive objects
+      if (typeof value === 'object' && value !== null) {
+        return '';
       }
 
       const stringValue = String(value).trim();

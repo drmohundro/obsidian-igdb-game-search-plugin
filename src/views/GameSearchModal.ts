@@ -51,7 +51,7 @@ export class GameSearchModal extends Modal {
 
   onOpen(): void {
     const { contentEl } = this
-    contentEl.createEl('h2', { text: 'Search Game' })
+    contentEl.createEl('h2', { text: 'Search game' })
 
     contentEl.createDiv({ cls: 'game-search-plugin__search-modal--input' }, (el) => {
       const textComponent = new TextComponent(el)
@@ -62,7 +62,7 @@ export class GameSearchModal extends Modal {
 
       textComponent.inputEl.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.isComposing) {
-          this.searchGame()
+          void this.searchGame()
         }
       })
 
