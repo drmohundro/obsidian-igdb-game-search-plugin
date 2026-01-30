@@ -20,13 +20,13 @@ If you're looking for alternatives, check out [obsidian-game-search-plugin](http
 
 ## Screenshots
 
-![Searching for a game](https://gist.github.com/user-attachments/assets/da6156b4-3f8b-4ce3-aa36-4320ed18d915)
+<img width="656" height="294" alt="Searching for a game" src="https://github.com/user-attachments/assets/8a3eacf7-2511-4549-a9f7-4b5f5f7ac38f" />
 
-![Search Results](https://gist.github.com/user-attachments/assets/51cdbf83-f810-4189-8f5e-16323489efd5)
+<img width="783" height="690" alt="Search Results" src="https://github.com/user-attachments/assets/a45675f4-8b08-4614-b491-362c66de59a8" />
 
-![Automatic Note Creation](https://gist.github.com/user-attachments/assets/22c09984-3486-4dc2-86c7-b6acc50b6f1f)
+<img width="768" height="844" alt="Automatic Note Creation" src="https://github.com/user-attachments/assets/e2eda6cb-16ce-4488-8adc-a3214f6feb8e" />
 
-![Automatic Note Creation](https://gist.github.com/user-attachments/assets/a7587a86-d207-4dfc-8acc-02433639c3e8)
+<img width="752" height="758" alt="Automatic Note Creation" src="https://github.com/user-attachments/assets/0cebbeaa-2164-4af2-91b7-98f32fe2b921" />
 
 ## Requirements
 
