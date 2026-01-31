@@ -46,7 +46,7 @@ export class IgdbApi {
       },
     })
 
-    const authResponse: IGDBAuthResponse = response.json
+    const authResponse = response.json as IGDBAuthResponse
 
     if (!authResponse.access_token) {
       throw new Error('Failed to authenticate with IGDB')
@@ -94,7 +94,7 @@ export class IgdbApi {
         body: body,
       })
 
-      const games: IGDBGame[] = response.json
+      const games = response.json as IGDBGame[]
 
       // Check for error response (e.g., invalid token)
       if ((games as unknown as { message?: string }).message) {

@@ -1,5 +1,21 @@
 import { Game } from '../models/game.model';
 import { App, normalizePath, Notice, TFile } from 'obsidian';
+// Duration unit type for moment.js (bundled with Obsidian)
+type DurationUnit = 'y' | 'Q' | 'M' | 'w' | 'd' | 'h' | 's' | 'ms';
+
+// Templater plugin API interface
+interface TemplaterPlugin {
+  settings: { trigger_on_file_creation: boolean };
+  templater: {
+    overwrite_file_commands(file: TFile): Promise<void>;
+  };
+}
+
+interface AppWithPlugins extends App {
+  plugins: {
+    plugins: Record<string, TemplaterPlugin | undefined>;
+  };
+}
 
 export async function getTemplateContents(
   app: App,
@@ -25,7 +41,14 @@ export async function getTemplateContents(
 export function applyTemplateTransformations(rawTemplateContents: string): string {
   return rawTemplateContents.replace(
     /{{\s*(date|time)\s*(([+-]\d+)([yqmwdhs]))?\s*(:.+?)?}}/gi,
-    (_, _timeOrDate, calc, timeDelta, unit, momentFormat) => {
+    (
+      _match: string,
+      _timeOrDate: string,
+      calc: string | undefined,
+      timeDelta: string | undefined,
+      unit: DurationUnit | undefined,
+      momentFormat: string | undefined
+    ) => {
       const now = window.moment();
       const currentDate = window.moment().clone().set({
         hour: now.get('hour'),
@@ -33,7 +56,7 @@ export function applyTemplateTransformations(rawTemplateContents: string): strin
         second: now.get('second'),
       });
 
-      if (calc) {
+      if (calc && timeDelta && unit) {
         currentDate.add(parseInt(timeDelta, 10), unit);
       }
 
@@ -68,21 +91,23 @@ function evaluateTemplateExpression(script: string, game: Game): string {
   // Support simple property access: game.property
   const simplePropertyMatch = trimmedScript.match(/^game\.(\w+)$/);
   if (simplePropertyMatch) {
-    const prop = simplePropertyMatch[1];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic property access for template evaluation
-    const value = (game as any)[prop];
-    return typeof value === 'string' ? value : JSON.stringify(value);
+    const prop = simplePropertyMatch[1] as keyof Game;
+    if (prop in game) {
+      const value = game[prop];
+      return typeof value === 'string' ? value : JSON.stringify(value);
+    }
   }
 
   // Support array join: game.property.join(', ') or game.property.join(", ")
   const joinMatch = trimmedScript.match(/^game\.(\w+)\.join\(['"](.+?)['"]\)$/);
   if (joinMatch) {
-    const prop = joinMatch[1];
+    const prop = joinMatch[1] as keyof Game;
     const separator = joinMatch[2];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Dynamic property access for template evaluation
-    const value = (game as any)[prop];
-    if (Array.isArray(value)) {
-      return value.join(separator);
+    if (prop in game) {
+      const value = game[prop];
+      if (Array.isArray(value)) {
+        return value.join(separator);
+      }
     }
   }
 
@@ -92,9 +117,8 @@ function evaluateTemplateExpression(script: string, game: Game): string {
 }
 
 export async function useTemplaterPluginInFile(app: App, file: TFile): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Templater plugin API is not exposed in Obsidian types
-  const templater = (app as any).plugins.plugins['templater-obsidian'];
-  if (templater && !templater?.settings['trigger_on_file_creation']) {
+  const templater = (app as AppWithPlugins).plugins.plugins['templater-obsidian'];
+  if (templater && !templater.settings.trigger_on_file_creation) {
     await templater.templater.overwrite_file_commands(file);
   }
 }

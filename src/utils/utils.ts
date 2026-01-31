@@ -73,9 +73,12 @@ export function applyDefaultFrontMatter(
     if (rawValue !== null && typeof rawValue === 'object' && !Array.isArray(rawValue)) {
       continue;
     }
-    const value = String(rawValue ?? '').trim();
-    if (frontMatter[key] && frontMatter[key] !== value) {
-      frontMatter[key] = `${frontMatter[key]}, ${value}`;
+    const value = JSON.stringify(rawValue ?? '').trim();
+    const existingValue = frontMatter[key];
+    if (existingValue !== undefined && existingValue !== value) {
+      const existingStr =
+        typeof existingValue === 'string' ? existingValue : JSON.stringify(existingValue);
+      frontMatter[key] = `${existingStr}, ${value}`;
     } else {
       frontMatter[key] = value;
     }
@@ -129,7 +132,7 @@ export function toStringFrontMatter(frontMatter: Record<string, unknown>): strin
         return '';
       }
 
-      const stringValue = String(value).trim();
+      const stringValue = JSON.stringify(value).trim();
       if (!stringValue) return '';
       if (/\r|\n/.test(stringValue)) return '';
       if (/:\s/.test(stringValue) || /["']/.test(stringValue)) {
