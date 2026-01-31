@@ -218,7 +218,7 @@ export default class GameSearchPlugin extends Plugin {
   async createNewGameNote(): Promise<void> {
     // Validate API credentials
     if (!this.settings.clientId || !this.settings.clientSecret) {
-      new Notice('Configure IGDB API credentials in settings first.');
+      new Notice('Configure igdb API credentials in settings first.');
       return;
     }
 

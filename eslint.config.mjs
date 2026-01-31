@@ -1,8 +1,7 @@
-// eslint.config.mjs
-import { defineConfig } from 'eslint/config'
-import globals from 'globals'
-import tsparser from '@typescript-eslint/parser'
-import obsidianmd from 'eslint-plugin-obsidianmd'
+import { defineConfig } from 'eslint/config';
+import globals from 'globals';
+import tsparser from '@typescript-eslint/parser';
+import obsidianmd from 'eslint-plugin-obsidianmd';
 
 export default defineConfig([
   { ignores: ['version-bump.mjs'] },
@@ -20,25 +19,5 @@ export default defineConfig([
       },
       parserOptions: { project: './tsconfig.json' },
     },
-
-    // languageOptions: {
-    //   globals: {
-    //     ...globals.browser,
-    //     ...globals.node,
-    //     createDiv: 'readonly',
-    //   },
-    //   parserOptions: {
-    //     projectService: true,
-    //   },
-    // },
-
-    rules: {
-      'obsidianmd/ui/sentence-case': [
-        'error',
-        {
-          ignoreRegex: ['IGDB', 'API', 'ID', 'Twitch'],
-        },
-      ],
-    },
   },
-])
+]);
