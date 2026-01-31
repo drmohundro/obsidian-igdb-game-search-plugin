@@ -1,6 +1,14 @@
 // Simplified suggest component without @popperjs/core dependency
 import { App, ISuggestOwner, Scope } from 'obsidian';
 
+// Obsidian's keymap API is internal but we need it for scope management
+interface AppWithKeymap extends App {
+  keymap: {
+    pushScope(scope: Scope): void;
+    popScope(scope: Scope): void;
+  };
+}
+
 const wrapAround = (value: number, size: number): number => {
   return ((value % size) + size) % size;
 };
@@ -111,10 +119,13 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     const suggestion = this.suggestEl.createDiv('suggestion');
     this.suggest = new Suggest(this, suggestion, this.scope);
 
-    this.scope.register([], 'Escape', this.close.bind(this));
+    this.scope.register([], 'Escape', () => {
+      this.close();
+      return false;
+    });
 
-    this.inputEl.addEventListener('input', this.onInputChanged.bind(this));
-    this.inputEl.addEventListener('focus', this.onInputChanged.bind(this));
+    this.inputEl.addEventListener('input', () => this.onInputChanged());
+    this.inputEl.addEventListener('focus', () => this.onInputChanged());
     this.inputEl.addEventListener('blur', () => {
       // Delay close to allow click events on suggestions
       setTimeout(() => this.close(), 150);
@@ -142,8 +153,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
   }
 
   open(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Obsidian's keymap API is not exposed in public types
-    (this.app as any).keymap.pushScope(this.scope);
+    (this.app as AppWithKeymap).keymap.pushScope(this.scope);
 
     // Position the suggest container below the input
     const rect = this.inputEl.getBoundingClientRect();
@@ -155,8 +165,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
   }
 
   close(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Obsidian's keymap API is not exposed in public types
-    (this.app as any).keymap.popScope(this.scope);
+    (this.app as AppWithKeymap).keymap.popScope(this.scope);
 
     this.suggest.setSuggestions([]);
     this.suggestEl.detach();

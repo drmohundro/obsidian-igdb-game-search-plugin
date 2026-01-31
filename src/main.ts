@@ -1,60 +1,60 @@
-import { MarkdownView, Notice, Plugin, TFile, requestUrl } from 'obsidian'
+import { MarkdownView, Notice, Plugin, TFile, requestUrl } from 'obsidian';
 
-import { GameSearchModal } from './views/GameSearchModal'
-import { GameSuggestModal } from './views/GameSuggestModal'
-import { CursorJumper } from './utils/CursorJumper'
-import { Game, IGDBTokenData } from './models/game.model'
+import { GameSearchModal } from './views/GameSearchModal';
+import { GameSuggestModal } from './views/GameSuggestModal';
+import { CursorJumper } from './utils/CursorJumper';
+import { Game, IGDBTokenData } from './models/game.model';
 import {
   GameSearchSettingTab,
   GameSearchPluginSettings,
   DEFAULT_SETTINGS,
-} from './settings/settings'
+} from './settings/settings';
 import {
   getTemplateContents,
   applyTemplateTransformations,
   useTemplaterPluginInFile,
   executeInlineScriptsTemplates,
-} from './utils/template'
+} from './utils/template';
 import {
   replaceVariableSyntax,
   makeFileName,
   applyDefaultFrontMatter,
   toStringFrontMatter,
-} from './utils/utils'
-import { IgdbApi } from './apis/IgdbApi'
+} from './utils/utils';
+import { IgdbApi } from './apis/IgdbApi';
 
 export default class GameSearchPlugin extends Plugin {
-  settings!: GameSearchPluginSettings
-  private api: IgdbApi | null = null
+  settings!: GameSearchPluginSettings;
+  private api: IgdbApi | null = null;
 
   async onload() {
-    await this.loadSettings()
+    await this.loadSettings();
 
     // This creates an icon in the left ribbon.
     const ribbonIconEl = this.addRibbonIcon('gamepad-2', 'Create new game note', () =>
       this.createNewGameNote()
-    )
-    ribbonIconEl.addClass('obsidian-game-search-plugin-ribbon-class')
+    );
+    ribbonIconEl.addClass('obsidian-game-search-plugin-ribbon-class');
 
     // This adds a simple command that can be triggered anywhere
     this.addCommand({
       id: 'open-game-search-modal',
       name: 'Create new game note',
       callback: () => this.createNewGameNote(),
-    })
+    });
 
     this.addCommand({
       id: 'open-game-search-modal-to-insert',
       name: 'Insert game metadata',
       callback: () => this.insertMetadata(),
-    })
+    });
 
     // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new GameSearchSettingTab(this.app, this))
+    this.addSettingTab(new GameSearchSettingTab(this.app, this));
 
     console.debug(
       `Game Search: version ${this.manifest.version} (requires obsidian ${this.manifest.minAppVersion})`
-    )
+    );
   }
 
   getApi(): IgdbApi {
@@ -68,22 +68,23 @@ export default class GameSearchPlugin extends Plugin {
         this.settings.clientSecret,
         this.settings.tokenData,
         (tokenData: IGDBTokenData) => {
-          this.settings.tokenData = tokenData
-          void this.saveSettings()
+          this.settings.tokenData = tokenData;
+          void this.saveSettings();
         }
-      )
+      );
     }
-    return this.api
+    return this.api;
   }
 
   showNotice(message: unknown) {
     try {
-      const messageStr = message instanceof Error
-        ? message.message
-        : typeof message === 'string'
-        ? message
-        : 'An error occurred'
-      new Notice(messageStr)
+      const messageStr =
+        message instanceof Error
+          ? message.message
+          : typeof message === 'string'
+            ? message
+            : 'An error occurred';
+      new Notice(messageStr);
     } catch {
       // ignore
     }
@@ -91,8 +92,8 @@ export default class GameSearchPlugin extends Plugin {
 
   // open modal for game search
   async searchGameMetadata(query?: string): Promise<Game> {
-    const searchedGames = await this.openGameSearchModal(query)
-    return await this.openGameSuggestModal(searchedGames)
+    const searchedGames = await this.openGameSearchModal(query);
+    return await this.openGameSuggestModal(searchedGames);
   }
 
   async getRenderedContents(game: Game): Promise<string> {
@@ -102,49 +103,50 @@ export default class GameSearchPlugin extends Plugin {
       defaultFrontmatterKeyType,
       enableCoverImageSave,
       coverImagePath,
-    } = this.settings
+    } = this.settings;
 
-    let contentBody = ''
+    let contentBody = '';
 
     if (enableCoverImageSave) {
-      const coverImageUrl = game.coverBigUrl || game.coverSmallUrl || game.coverUrl
+      const coverImageUrl = game.coverBigUrl || game.coverSmallUrl || game.coverUrl;
       if (coverImageUrl) {
-        const imageName = makeFileName(game, this.settings.fileNameFormat, 'jpg')
+        const imageName = makeFileName(game, this.settings.fileNameFormat, 'jpg');
         game.localCoverImage = await this.downloadAndSaveImage(
           imageName,
           coverImagePath,
           coverImageUrl
-        )
+        );
       }
     }
 
     if (templateFile) {
-      const templateContents = await getTemplateContents(this.app, templateFile)
+      const templateContents = await getTemplateContents(this.app, templateFile);
       const replacedVariable = replaceVariableSyntax(
         game,
         applyTemplateTransformations(templateContents)
-      )
-      contentBody += executeInlineScriptsTemplates(game, replacedVariable)
+      );
+      contentBody += executeInlineScriptsTemplates(game, replacedVariable);
     } else {
       // Default frontmatter generation
       if (useDefaultFrontmatter) {
-        const frontMatter = applyDefaultFrontMatter(game, {}, defaultFrontmatterKeyType)
+        const frontMatter = applyDefaultFrontMatter(game, {}, defaultFrontmatterKeyType);
         // Filter out undefined/null values and complex objects for frontmatter
         const cleanFrontMatter = Object.fromEntries(
           Object.entries(frontMatter).filter(([_, v]) => {
-            if (v === undefined || v === null || v === '') return false
+            if (v === undefined || v === null || v === '') return false;
             // Filter out non-array objects
-            if (typeof v === 'object' && !Array.isArray(v)) return false
+            if (typeof v === 'object' && !Array.isArray(v)) return false;
             // Filter out arrays that contain non-primitive values
-            if (Array.isArray(v) && v.some(item => typeof item === 'object' && item !== null)) return false
-            return true
+            if (Array.isArray(v) && v.some(item => typeof item === 'object' && item !== null))
+              return false;
+            return true;
           })
-        )
-        contentBody = `---\n${toStringFrontMatter(cleanFrontMatter)}\n---\n`
+        );
+        contentBody = `---\n${toStringFrontMatter(cleanFrontMatter)}\n---\n`;
       }
     }
 
-    return contentBody
+    return contentBody;
   }
 
   async downloadAndSaveImage(
@@ -152,10 +154,10 @@ export default class GameSearchPlugin extends Plugin {
     directory: string,
     imageUrl: string
   ): Promise<string> {
-    const { enableCoverImageSave } = this.settings
+    const { enableCoverImageSave } = this.settings;
     if (!enableCoverImageSave) {
-      console.warn('Cover image saving is not enabled.')
-      return ''
+      console.warn('Cover image saving is not enabled.');
+      return '';
     }
 
     try {
@@ -165,109 +167,109 @@ export default class GameSearchPlugin extends Plugin {
         headers: {
           Accept: 'image/*',
         },
-      })
+      });
 
       if (response.status !== 200) {
-        throw new Error(`Failed to download image: ${response.status}`)
+        throw new Error(`Failed to download image: ${response.status}`);
       }
 
-      const imageData = response.arrayBuffer
-      const filePath = directory ? `${directory}/${imageName}` : imageName
+      const imageData = response.arrayBuffer;
+      const filePath = directory ? `${directory}/${imageName}` : imageName;
 
       // Ensure directory exists
       if (directory) {
-        const folderExists = await this.app.vault.adapter.exists(directory)
+        const folderExists = await this.app.vault.adapter.exists(directory);
         if (!folderExists) {
-          await this.app.vault.createFolder(directory)
+          await this.app.vault.createFolder(directory);
         }
       }
 
-      await this.app.vault.adapter.writeBinary(filePath, imageData)
-      return filePath
+      await this.app.vault.adapter.writeBinary(filePath, imageData);
+      return filePath;
     } catch (error) {
-      console.error('Error downloading or saving image:', error)
-      return ''
+      console.error('Error downloading or saving image:', error);
+      return '';
     }
   }
 
   async insertMetadata(): Promise<void> {
     try {
-      const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView)
+      const markdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
       if (!markdownView || !markdownView.file) {
-        console.warn('Can not find an active markdown view')
-        return
+        console.warn('Can not find an active markdown view');
+        return;
       }
 
-      const game = await this.searchGameMetadata(markdownView.file.basename)
+      const game = await this.searchGameMetadata(markdownView.file.basename);
 
       if (!markdownView.editor) {
-        console.warn('Can not find editor from the active markdown view')
-        return
+        console.warn('Can not find editor from the active markdown view');
+        return;
       }
 
-      const renderedContents = await this.getRenderedContents(game)
-      markdownView.editor.replaceRange(renderedContents, { line: 0, ch: 0 })
+      const renderedContents = await this.getRenderedContents(game);
+      markdownView.editor.replaceRange(renderedContents, { line: 0, ch: 0 });
     } catch (err) {
-      console.warn(err)
-      this.showNotice(err)
+      console.warn(err);
+      this.showNotice(err);
     }
   }
 
   async createNewGameNote(): Promise<void> {
     // Validate API credentials
     if (!this.settings.clientId || !this.settings.clientSecret) {
-      new Notice('Configure IGDB API credentials in settings first')
-      return
+      new Notice('Configure IGDB API credentials in settings first.');
+      return;
     }
 
     try {
-      const game = await this.searchGameMetadata()
-      const renderedContents = await this.getRenderedContents(game)
+      const game = await this.searchGameMetadata();
+      const renderedContents = await this.getRenderedContents(game);
 
       // Create new file
-      const fileName = makeFileName(game, this.settings.fileNameFormat)
-      const folder = this.settings.folder || ''
-      const filePath = folder ? `${folder}/${fileName}` : fileName
+      const fileName = makeFileName(game, this.settings.fileNameFormat);
+      const folder = this.settings.folder || '';
+      const filePath = folder ? `${folder}/${fileName}` : fileName;
 
       // Ensure folder exists
       if (folder) {
-        const folderExists = await this.app.vault.adapter.exists(folder)
+        const folderExists = await this.app.vault.adapter.exists(folder);
         if (!folderExists) {
-          await this.app.vault.createFolder(folder)
+          await this.app.vault.createFolder(folder);
         }
       }
 
-      const targetFile = await this.app.vault.create(filePath, renderedContents)
+      const targetFile = await this.app.vault.create(filePath, renderedContents);
 
       // If using Templater plugin
-      await useTemplaterPluginInFile(this.app, targetFile)
-      void this.openNewGameNote(targetFile)
+      await useTemplaterPluginInFile(this.app, targetFile);
+      void this.openNewGameNote(targetFile);
     } catch (err) {
-      console.warn(err)
-      this.showNotice(err)
+      console.warn(err);
+      this.showNotice(err);
     }
   }
 
   async openNewGameNote(targetFile: TFile) {
-    if (!this.settings.openPageOnCompletion) return
+    if (!this.settings.openPageOnCompletion) return;
 
-    const activeLeaf = this.app.workspace.getLeaf()
+    const activeLeaf = this.app.workspace.getLeaf();
     if (!activeLeaf) {
-      console.warn('No active leaf')
-      return
+      console.warn('No active leaf');
+      return;
     }
 
-    await activeLeaf.openFile(targetFile, { state: { mode: 'source' } })
-    activeLeaf.setEphemeralState({ rename: 'all' })
-    new CursorJumper(this.app).jumpToNextCursorLocation()
+    await activeLeaf.openFile(targetFile, { state: { mode: 'source' } });
+    activeLeaf.setEphemeralState({ rename: 'all' });
+    new CursorJumper(this.app).jumpToNextCursorLocation();
   }
 
   async openGameSearchModal(query = ''): Promise<Game[]> {
     return new Promise((resolve, reject) => {
       return new GameSearchModal(this, query, (error, results) => {
-        return error ? reject(error) : resolve(results ?? [])
-      }).open()
-    })
+        return error ? reject(error) : resolve(results ?? []);
+      }).open();
+    });
   }
 
   async openGameSuggestModal(games: Game[]): Promise<Game> {
@@ -278,22 +280,23 @@ export default class GameSearchPlugin extends Plugin {
         games,
         (error, selectedGame) => {
           if (error) {
-            return reject(error)
+            return reject(error);
           }
           if (!selectedGame) {
-            return reject(new Error('No game selected'))
+            return reject(new Error('No game selected'));
           }
-          return resolve(selectedGame)
+          return resolve(selectedGame);
         }
-      ).open()
-    })
+      ).open();
+    });
   }
 
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
+    const loadedData = (await this.loadData()) as Partial<GameSearchPluginSettings>;
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
   }
 
   async saveSettings() {
-    await this.saveData(this.settings)
+    await this.saveData(this.settings);
   }
 }

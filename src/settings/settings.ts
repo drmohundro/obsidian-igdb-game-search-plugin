@@ -160,7 +160,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
     });
     desc.createEl('br');
     desc.createEl('a', {
-      text: 'Go to Twitch developer console',
+      text: 'Go to twitch developer console.',
       href: 'https://dev.twitch.tv/console',
     });
     desc.createEl('br');
@@ -173,7 +173,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   private createClientIdSetting(containerEl: HTMLElement): void {
     new Setting(containerEl)
       .setName('Client ID')
-      .setDesc('Your Twitch/IGDB client ID')
+      .setDesc('Your Twitch/IGDB client ID.')
       .addText(text => {
         text
           .setPlaceholder('Enter client ID')
@@ -188,7 +188,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   private createClientSecretSetting(containerEl: HTMLElement): void {
     new Setting(containerEl)
       .setName('Client secret')
-      .setDesc('Your Twitch/IGDB client secret (stored locally)')
+      .setDesc('Your Twitch/IGDB client secret (stored locally).')
       .addText(text => {
         text.inputEl.type = 'password';
         text
