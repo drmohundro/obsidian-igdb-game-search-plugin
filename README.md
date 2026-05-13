@@ -8,6 +8,9 @@ This plugin is almost entirely based on [obsidian-book-search-plugin](https://gi
 
 If you're looking for alternatives, check out [obsidian-game-search-plugin](https://github.com/CMorooney/obsidian-game-search-plugin) by [CMorooney](https://github.com/CMorooney).
 
+> [!TIP]
+> If you're looking for yet another almost identical alternative, see <https://github.com/tetsuya-dev-jp/igdb-game-search>. It seems we both had the same idea and copied from the book search plugin. In fact, this one was added to the Obsidian Community before mine (even the same entry ID), so it probably makes sense for that one to be the canonical one.
+
 ## Features
 
 - Search for games using the IGDB database
