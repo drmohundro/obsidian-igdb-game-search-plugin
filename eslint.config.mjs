@@ -4,7 +4,8 @@ import tsparser from '@typescript-eslint/parser';
 import obsidianmd from 'eslint-plugin-obsidianmd';
 
 export default defineConfig([
-  { ignores: ['version-bump.mjs'] },
+  // Lint TypeScript source only; skip the bundled output and root build/config scripts
+  { ignores: ['main.js', '*.mjs'] },
 
   ...obsidianmd.configs.recommended,
 

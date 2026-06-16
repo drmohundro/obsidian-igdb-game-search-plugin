@@ -24,8 +24,24 @@ class Suggest<T> {
     this.owner = owner;
     this.containerEl = containerEl;
 
-    containerEl.on('click', '.suggestion-item', this.onSuggestionClick.bind(this) as (this: HTMLElement, ev: MouseEvent, delegateTarget: HTMLElement) => void);
-    containerEl.on('mousemove', '.suggestion-item', this.onSuggestionMouseover.bind(this) as (this: HTMLElement, ev: MouseEvent, delegateTarget: HTMLElement) => void);
+    containerEl.on(
+      'click',
+      '.suggestion-item',
+      this.onSuggestionClick.bind(this) as (
+        this: HTMLElement,
+        ev: MouseEvent,
+        delegateTarget: HTMLElement
+      ) => void
+    );
+    containerEl.on(
+      'mousemove',
+      '.suggestion-item',
+      this.onSuggestionMouseover.bind(this) as (
+        this: HTMLElement,
+        ev: MouseEvent,
+        delegateTarget: HTMLElement
+      ) => void
+    );
 
     scope.register([], 'ArrowUp', event => {
       if (!event.isComposing) {
@@ -113,7 +129,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     this.suggestEl = createDiv('suggestion-container');
     this.suggestEl.setCssProps({
       position: 'absolute',
-      'z-index': '1000'
+      'z-index': '1000',
     });
 
     const suggestion = this.suggestEl.createDiv('suggestion');

@@ -74,33 +74,33 @@ Search for this in the Obsidian Community Plugins or use [BRAT](https://github.c
 
 ### General Settings
 
-| Setting | Description |
-|---------|-------------|
-| New file location | Folder where new game notes will be created |
-| New file name | Template for naming new files. Available variables: `{{name}}`, `{{developer}}`, `{{releaseYear}}`, `{{DATE}}` |
-| Template file | Path to a template file for new game notes |
+| Setting           | Description                                                                                                    |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- |
+| New file location | Folder where new game notes will be created                                                                    |
+| New file name     | Template for naming new files. Available variables: `{{name}}`, `{{developer}}`, `{{releaseYear}}`, `{{DATE}}` |
+| Template file     | Path to a template file for new game notes                                                                     |
 
 ### IGDB API Settings
 
-| Setting | Description |
-|---------|-------------|
-| Client ID | Your Twitch/IGDB Client ID |
-| Client Secret | Your Twitch/IGDB Client Secret |
+| Setting         | Description                           |
+| --------------- | ------------------------------------- |
+| Client ID       | Your Twitch/IGDB Client ID            |
+| Client Secret   | Your Twitch/IGDB Client Secret        |
 | Test Connection | Button to verify your API credentials |
 
 ### UI Settings
 
-| Setting | Description |
-|---------|-------------|
-| Open new game note | Automatically open notes after creation |
-| Show cover images in search | Display cover art in search results |
+| Setting                     | Description                             |
+| --------------------------- | --------------------------------------- |
+| Open new game note          | Automatically open notes after creation |
+| Show cover images in search | Display cover art in search results     |
 
 ### Cover Image Settings
 
-| Setting | Description |
-|---------|-------------|
+| Setting                   | Description                                  |
+| ------------------------- | -------------------------------------------- |
 | Save cover images locally | Download and save cover images to your vault |
-| Cover image path | Folder where cover images will be saved |
+| Cover image path          | Folder where cover images will be saved      |
 
 ## Templates
 
@@ -108,41 +108,41 @@ You can create custom templates for your game notes. Templates support variable 
 
 ### Available Template Variables
 
-| Variable | Description |
-|----------|-------------|
-| `{{name}}` | Game title |
-| `{{slug}}` | URL-friendly game name |
-| `{{releaseDate}}` | Release date (YYYY-MM-DD format) |
-| `{{releaseYear}}` | Release year |
-| `{{developer}}` | Primary developer |
-| `{{developers}}` | All developers (array) |
-| `{{publisher}}` | Primary publisher |
-| `{{publishers}}` | All publishers (array) |
-| `{{genres}}` | Genres (array) |
-| `{{genresFormatted}}` | Genres as formatted string |
-| `{{gameModes}}` | Game modes (array) |
-| `{{gameModesFormatted}}` | Game modes as formatted string |
-| `{{platforms}}` | Platforms (array) |
-| `{{platformsFormatted}}` | Platforms as formatted string |
-| `{{coverUrl}}` | Cover image URL (thumbnail) |
-| `{{coverSmallUrl}}` | Small cover image URL |
-| `{{coverBigUrl}}` | Large cover image URL |
-| `{{localCoverImage}}` | Path to locally saved cover image |
-| `{{summary}}` | Game summary |
-| `{{storyline}}` | Game storyline |
-| `{{rating}}` | IGDB user rating (0-100) |
-| `{{aggregatedRating}}` | Aggregated critic rating (0-100) |
-| `{{url}}` | IGDB page URL |
-| `{{websiteUrl}}` | Official game website URL |
+| Variable                 | Description                       |
+| ------------------------ | --------------------------------- |
+| `{{name}}`               | Game title                        |
+| `{{slug}}`               | URL-friendly game name            |
+| `{{releaseDate}}`        | Release date (YYYY-MM-DD format)  |
+| `{{releaseYear}}`        | Release year                      |
+| `{{developer}}`          | Primary developer                 |
+| `{{developers}}`         | All developers (array)            |
+| `{{publisher}}`          | Primary publisher                 |
+| `{{publishers}}`         | All publishers (array)            |
+| `{{genres}}`             | Genres (array)                    |
+| `{{genresFormatted}}`    | Genres as formatted string        |
+| `{{gameModes}}`          | Game modes (array)                |
+| `{{gameModesFormatted}}` | Game modes as formatted string    |
+| `{{platforms}}`          | Platforms (array)                 |
+| `{{platformsFormatted}}` | Platforms as formatted string     |
+| `{{coverUrl}}`           | Cover image URL (thumbnail)       |
+| `{{coverSmallUrl}}`      | Small cover image URL             |
+| `{{coverBigUrl}}`        | Large cover image URL             |
+| `{{localCoverImage}}`    | Path to locally saved cover image |
+| `{{summary}}`            | Game summary                      |
+| `{{storyline}}`          | Game storyline                    |
+| `{{rating}}`             | IGDB user rating (0-100)          |
+| `{{aggregatedRating}}`   | Aggregated critic rating (0-100)  |
+| `{{url}}`                | IGDB page URL                     |
+| `{{websiteUrl}}`         | Official game website URL         |
 
 ### Date/Time Variables
 
-| Variable | Description |
-|----------|-------------|
-| `{{date}}` | Current date (YYYY-MM-DD) |
+| Variable          | Description                     |
+| ----------------- | ------------------------------- |
+| `{{date}}`        | Current date (YYYY-MM-DD)       |
 | `{{date:format}}` | Current date with custom format |
-| `{{date+1d}}` | Tomorrow |
-| `{{date-1w}}` | One week ago |
+| `{{date+1d}}`     | Tomorrow                        |
+| `{{date-1w}}`     | One week ago                    |
 
 ### Inline Scripts
 
@@ -157,31 +157,31 @@ Rating: <%=game.rating ? game.rating + '/100' : 'N/A'%>
 ```markdown
 ---
 tags: 🎮Game
-id: {{id}}
-name: "{{name}}"
-releaseDate: {{releaseDate}}
-releaseYear: {{releaseYear}}
-developer: "{{developer}}"
-developers: [{{developers}}]
-publisher: "{{publisher}}"
-publishers: [{{publishers}}]
-developerLogo: {{developerLogo}}
-genres: [{{genres}}]
-gameModes: [{{gameModes}}]
-platforms: [{{platforms}}]
-cover: {{coverUrl}}
-coverSmallUrl: {{coverSmallUrl}}
-coverBigUrl: {{coverBigUrl}}
-localCover: {{localCoverImage}}
-rating: {{rating}}
-ratingCount: {{ratingCount}}
-aggregatedRating: {{aggregatedRating}}
-aggregatedRatingCount: {{aggregatedRatingCount}}
-url: {{url}}
-websiteUrl: {{websiteUrl}}
+id: { { id } }
+name: '{{name}}'
+releaseDate: { { releaseDate } }
+releaseYear: { { releaseYear } }
+developer: '{{developer}}'
+developers: [{ { developers } }]
+publisher: '{{publisher}}'
+publishers: [{ { publishers } }]
+developerLogo: { { developerLogo } }
+genres: [{ { genres } }]
+gameModes: [{ { gameModes } }]
+platforms: [{ { platforms } }]
+cover: { { coverUrl } }
+coverSmallUrl: { { coverSmallUrl } }
+coverBigUrl: { { coverBigUrl } }
+localCover: { { localCoverImage } }
+rating: { { rating } }
+ratingCount: { { ratingCount } }
+aggregatedRating: { { aggregatedRating } }
+aggregatedRatingCount: { { aggregatedRatingCount } }
+url: { { url } }
+websiteUrl: { { websiteUrl } }
 game-status: backlog
-created: {{ DATE:YYYY-MM-DD HH:mm:ss }}
-updated: {{ DATE:YYYY-MM-DD HH:mm:ss }}
+created: { { DATE:YYYY-MM-DD HH:mm:ss } }
+updated: { { DATE:YYYY-MM-DD HH:mm:ss } }
 ---
 
 # {{name}}
@@ -196,12 +196,9 @@ updated: {{ DATE:YYYY-MM-DD HH:mm:ss }}
 
 ## Notes
 
-
 ## What I Liked
 
-
 ## What I Didn't Like
-
 ```
 
 ## Development

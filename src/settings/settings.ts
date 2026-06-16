@@ -132,7 +132,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
     desc.createDiv({ text: 'Select a template file for new game notes.' });
     desc.createEl('a', {
       text: 'Template documentation',
-      href: 'https://github.com/your-repo/obsidian-game-search-plugin#templates',
+      href: 'https://github.com/drmohundro/obsidian-igdb-game-search-plugin#templates',
     });
 
     new Setting(containerEl)
@@ -160,7 +160,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
     });
     desc.createEl('br');
     desc.createEl('a', {
-      text: 'Go to twitch developer console.',
+      text: '1. Go to twitch developer console.',
       href: 'https://dev.twitch.tv/console',
     });
     desc.createEl('br');

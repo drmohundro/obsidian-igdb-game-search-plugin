@@ -50,11 +50,14 @@ export function applyTemplateTransformations(rawTemplateContents: string): strin
       momentFormat: string | undefined
     ) => {
       const now = window.moment();
-      const currentDate = window.moment().clone().set({
-        hour: now.get('hour'),
-        minute: now.get('minute'),
-        second: now.get('second'),
-      });
+      const currentDate = window
+        .moment()
+        .clone()
+        .set({
+          hour: now.get('hour'),
+          minute: now.get('minute'),
+          second: now.get('second'),
+        });
 
       if (calc && timeDelta && unit) {
         currentDate.add(parseInt(timeDelta, 10), unit);
@@ -112,7 +115,10 @@ function evaluateTemplateExpression(script: string, game: Game): string {
   }
 
   // For unsupported expressions, return empty string with warning
-  console.warn('Template expression not supported (limited to simple property access and join):', trimmedScript);
+  console.warn(
+    'Template expression not supported (limited to simple property access and join):',
+    trimmedScript
+  );
   return '';
 }
 
