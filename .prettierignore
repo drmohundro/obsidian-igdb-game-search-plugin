@@ -1,0 +1,10 @@
+# Generated build output
+main.js
+
+# Tool-owned files (version-bump.mjs writes these with tabs; npm owns the lockfile)
+manifest.json
+versions.json
+package-lock.json
+
+# Editor/tooling state
+.claude/

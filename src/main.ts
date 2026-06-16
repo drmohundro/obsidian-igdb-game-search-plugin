@@ -58,11 +58,7 @@ export default class GameSearchPlugin extends Plugin {
   }
 
   getApi(): IgdbApi {
-    if (
-      !this.api ||
-      this.api['clientId'] !== this.settings.clientId ||
-      this.api['clientSecret'] !== this.settings.clientSecret
-    ) {
+    if (!this.api || !this.api.matches(this.settings.clientId, this.settings.clientSecret)) {
       this.api = new IgdbApi(
         this.settings.clientId,
         this.settings.clientSecret,
@@ -90,9 +86,10 @@ export default class GameSearchPlugin extends Plugin {
     }
   }
 
-  // open modal for game search
-  async searchGameMetadata(query?: string): Promise<Game> {
+  // open modal for game search; resolves null if the user cancels at any step
+  async searchGameMetadata(query?: string): Promise<Game | null> {
     const searchedGames = await this.openGameSearchModal(query);
+    if (!searchedGames.length) return null;
     return await this.openGameSuggestModal(searchedGames);
   }
 
@@ -186,7 +183,7 @@ export default class GameSearchPlugin extends Plugin {
 
       await this.app.vault.adapter.writeBinary(filePath, imageData);
       return filePath;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error downloading or saving image:', error);
       return '';
     }
@@ -201,6 +198,7 @@ export default class GameSearchPlugin extends Plugin {
       }
 
       const game = await this.searchGameMetadata(markdownView.file.basename);
+      if (!game) return;
 
       if (!markdownView.editor) {
         console.warn('Can not find editor from the active markdown view');
@@ -224,6 +222,7 @@ export default class GameSearchPlugin extends Plugin {
 
     try {
       const game = await this.searchGameMetadata();
+      if (!game) return;
       const renderedContents = await this.getRenderedContents(game);
 
       // Create new file
@@ -266,15 +265,15 @@ export default class GameSearchPlugin extends Plugin {
 
   async openGameSearchModal(query = ''): Promise<Game[]> {
     return new Promise((resolve, reject) => {
-      return new GameSearchModal(this, query, (error, results) => {
+      new GameSearchModal(this, query, (error, results) => {
         return error ? reject(error) : resolve(results ?? []);
       }).open();
     });
   }
 
-  async openGameSuggestModal(games: Game[]): Promise<Game> {
+  async openGameSuggestModal(games: Game[]): Promise<Game | null> {
     return new Promise((resolve, reject) => {
-      return new GameSuggestModal(
+      new GameSuggestModal(
         this.app,
         this.settings.showCoverImageInSearch,
         games,
@@ -282,10 +281,7 @@ export default class GameSearchPlugin extends Plugin {
           if (error) {
             return reject(error);
           }
-          if (!selectedGame) {
-            return reject(new Error('No game selected'));
-          }
-          return resolve(selectedGame);
+          return resolve(selectedGame ?? null);
         }
       ).open();
     });

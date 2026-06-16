@@ -1,14 +1,6 @@
 // Simplified suggest component without @popperjs/core dependency
 import { App, ISuggestOwner, Scope } from 'obsidian';
 
-// Obsidian's keymap API is internal but we need it for scope management
-interface AppWithKeymap extends App {
-  keymap: {
-    pushScope(scope: Scope): void;
-    popScope(scope: Scope): void;
-  };
-}
-
 const wrapAround = (value: number, size: number): number => {
   return ((value % size) + size) % size;
 };
@@ -24,8 +16,24 @@ class Suggest<T> {
     this.owner = owner;
     this.containerEl = containerEl;
 
-    containerEl.on('click', '.suggestion-item', this.onSuggestionClick.bind(this) as (this: HTMLElement, ev: MouseEvent, delegateTarget: HTMLElement) => void);
-    containerEl.on('mousemove', '.suggestion-item', this.onSuggestionMouseover.bind(this) as (this: HTMLElement, ev: MouseEvent, delegateTarget: HTMLElement) => void);
+    containerEl.on(
+      'click',
+      '.suggestion-item',
+      this.onSuggestionClick.bind(this) as (
+        this: HTMLElement,
+        ev: MouseEvent,
+        delegateTarget: HTMLElement
+      ) => void
+    );
+    containerEl.on(
+      'mousemove',
+      '.suggestion-item',
+      this.onSuggestionMouseover.bind(this) as (
+        this: HTMLElement,
+        ev: MouseEvent,
+        delegateTarget: HTMLElement
+      ) => void
+    );
 
     scope.register([], 'ArrowUp', event => {
       if (!event.isComposing) {
@@ -111,10 +119,6 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     this.scope = new Scope();
 
     this.suggestEl = createDiv('suggestion-container');
-    this.suggestEl.setCssProps({
-      position: 'absolute',
-      'z-index': '1000'
-    });
 
     const suggestion = this.suggestEl.createDiv('suggestion');
     this.suggest = new Suggest(this, suggestion, this.scope);
@@ -128,7 +132,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     this.inputEl.addEventListener('focus', () => this.onInputChanged());
     this.inputEl.addEventListener('blur', () => {
       // Delay close to allow click events on suggestions
-      setTimeout(() => this.close(), 150);
+      window.setTimeout(() => this.close(), 150);
     });
     this.suggestEl.on('mousedown', '.suggestion-container', (event: MouseEvent) => {
       event.preventDefault();
@@ -153,7 +157,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
   }
 
   open(): void {
-    (this.app as AppWithKeymap).keymap.pushScope(this.scope);
+    this.app.keymap.pushScope(this.scope);
 
     // Position the suggest container below the input
     const rect = this.inputEl.getBoundingClientRect();
@@ -161,11 +165,11 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     this.suggestEl.style.left = `${rect.left + window.scrollX}px`;
     this.suggestEl.style.width = `${rect.width}px`;
 
-    document.body.appendChild(this.suggestEl);
+    activeDocument.body.appendChild(this.suggestEl);
   }
 
   close(): void {
-    (this.app as AppWithKeymap).keymap.popScope(this.scope);
+    this.app.keymap.popScope(this.scope);
 
     this.suggest.setSuggestions([]);
     this.suggestEl.detach();
