@@ -64,7 +64,7 @@ export class IgdbApi {
     return this.tokenData.accessToken;
   }
 
-  async searchGames(query: string, limit = 15): Promise<Game[]> {
+  async searchGames(query: string, limit = 15, isRetry = false): Promise<Game[]> {
     const token = await this.authenticate();
 
     const body = `
@@ -98,17 +98,18 @@ export class IgdbApi {
 
       // Check for error response (e.g., invalid token)
       if ((games as unknown as { message?: string }).message) {
-        return this.searchGames(query, limit)
+        if (isRetry) throw new Error('IGDB request failed after token refresh');
         // Token might be invalid, refresh and retry once
         this.tokenData = null;
+        return this.searchGames(query, limit, true);
       }
 
       return games.map(game => this.mapToGame(game));
     } catch (error) {
-      // If request fails, try refreshing token once
-      if (this.tokenData) {
-        return this.searchGames(query, limit)
+      // On failure, refresh the token and retry exactly once
+      if (!isRetry) {
         this.tokenData = null;
+        return this.searchGames(query, limit, true);
       }
       throw error;
     }
