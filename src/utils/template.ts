@@ -31,7 +31,7 @@ export async function getTemplateContents(
   try {
     const templateFile = metadataCache.getFirstLinkpathDest(normalizedTemplatePath, '');
     return templateFile ? vault.cachedRead(templateFile) : '';
-  } catch (err) {
+  } catch (err: unknown) {
     console.error(`Failed to read template file '${normalizedTemplatePath}'`, err);
     new Notice('Failed to read template file');
     return '';
@@ -60,6 +60,7 @@ export function applyTemplateTransformations(rawTemplateContents: string): strin
         });
 
       if (calc && timeDelta && unit) {
+        // eslint-disable-next-line @typescript-eslint/no-deprecated -- false positive: moment's overloaded add() mis-resolves; this is the correct amount-first syntax
         currentDate.add(parseInt(timeDelta, 10), unit);
       }
 
@@ -79,7 +80,7 @@ export function executeInlineScriptsTemplates(game: Game, text: string): string 
     try {
       const outputs = evaluateTemplateExpression(script, game);
       return result.replace(matched, outputs);
-    } catch (err) {
+    } catch (err: unknown) {
       console.warn('Template script error:', err);
     }
     return result;

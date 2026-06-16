@@ -109,7 +109,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createFileNameFormatSetting(containerEl: HTMLElement): void {
-    const desc = document.createDocumentFragment();
+    const desc = activeDocument.createDocumentFragment();
     desc.createDiv({
       text: 'Available variables: {{name}}, {{developer}}, {{releaseYear}}, {{DATE}}',
     });
@@ -128,7 +128,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createTemplateFileSetting(containerEl: HTMLElement): void {
-    const desc = document.createDocumentFragment();
+    const desc = activeDocument.createDocumentFragment();
     desc.createDiv({ text: 'Select a template file for new game notes.' });
     desc.createEl('a', {
       text: 'Template documentation',
@@ -154,7 +154,7 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createApiDescription(containerEl: HTMLElement): void {
-    const desc = document.createDocumentFragment();
+    const desc = activeDocument.createDocumentFragment();
     desc.createDiv({
       text: 'To use this plugin, you need IGDB API credentials from Twitch',
     });

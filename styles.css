@@ -62,6 +62,8 @@
 
 /* Suggestion Container */
 .suggestion-container {
+  position: absolute;
+  z-index: 1000;
   background: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
   border-radius: 4px;

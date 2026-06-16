@@ -7,6 +7,7 @@ export class GameSearchModal extends Modal {
   private readonly SEARCH_BUTTON_TEXT = 'Search';
   private readonly REQUESTING_BUTTON_TEXT = 'Searching...';
   private isBusy = false;
+  private didSubmit = false;
   private okBtnRef?: ButtonComponent;
   private api: IgdbApi;
 
@@ -40,8 +41,10 @@ export class GameSearchModal extends Modal {
         new Notice(`No results found for "${this.query}"`);
         return;
       }
+      this.didSubmit = true;
       this.callback(null, searchResults);
     } catch (err) {
+      this.didSubmit = true;
       this.callback(err as Error);
     } finally {
       this.setBusy(false);
@@ -79,7 +82,12 @@ export class GameSearchModal extends Modal {
   }
 
   onClose(): void {
-    const { contentEl } = this;
-    contentEl.empty();
+    this.contentEl.empty();
+    // Dismissed (Escape, click-away, or a no-results search) without a successful submit:
+    // resolve the awaiting promise with no results instead of leaving it pending forever.
+    if (!this.didSubmit) {
+      this.didSubmit = true;
+      this.callback(null, []);
+    }
   }
 }

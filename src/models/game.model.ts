@@ -27,7 +27,6 @@ export interface Game {
   coverUrl?: string;
   coverSmallUrl?: string;
   coverBigUrl?: string;
-  screenshotUrl?: string;
   localCoverImage?: string;
 
   // Content

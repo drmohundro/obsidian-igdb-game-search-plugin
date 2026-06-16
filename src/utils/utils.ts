@@ -145,15 +145,12 @@ export function toStringFrontMatter(frontMatter: Record<string, unknown>): strin
 }
 
 export function getDate(input?: { format?: string; offset?: number }): string {
-  let duration;
-
+  const date = window.moment();
   if (typeof input?.offset === 'number') {
-    duration = window.moment.duration(input.offset, 'days');
+    // eslint-disable-next-line @typescript-eslint/no-deprecated -- false positive: moment's overloaded add() mis-resolves; this is the correct amount-first syntax
+    date.add(input.offset, 'days');
   }
-
-  return input?.format
-    ? window.moment().add(duration).format(input?.format)
-    : window.moment().add(duration).format('YYYY-MM-DD');
+  return date.format(input?.format ?? 'YYYY-MM-DD');
 }
 
 export function replaceDateInString(input: string): string {

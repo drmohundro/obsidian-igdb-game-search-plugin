@@ -22,6 +22,11 @@ export class IgdbApi {
     this.onTokenUpdate = onTokenUpdate;
   }
 
+  /** True when this client was built with the given credentials. */
+  matches(clientId: string, clientSecret: string): boolean {
+    return this.clientId === clientId && this.clientSecret === clientSecret;
+  }
+
   private isTokenValid(): boolean {
     if (!this.tokenData) return false;
     // Check if token expires in less than 5 minutes
@@ -187,8 +192,8 @@ export class IgdbApi {
   }
 
   private formatList(items: string[]): string {
-    if (items.length === 0) return '';
-    if (items.length === 1) return items[0];
+    // Always quote each item so single- and multi-item lists format identically
+    // (valid YAML flow-sequence content for use inside `[ ... ]`).
     return items.map(item => `"${item}"`).join(', ');
   }
 }

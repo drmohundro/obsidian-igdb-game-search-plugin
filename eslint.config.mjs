@@ -21,4 +21,17 @@ export default defineConfig([
       parserOptions: { project: './tsconfig.json' },
     },
   },
+
+  {
+    // obsidianmd's recommended set enables type-aware rules globally, but they require TS type
+    // information and throw on JSON/Markdown (e.g. package.json). Restrict them to TypeScript.
+    files: ['**/*.json', '**/*.md'],
+    rules: {
+      'obsidianmd/no-plugin-as-component': 'off',
+      'obsidianmd/no-unsupported-api': 'off',
+      'obsidianmd/no-view-references-in-plugin': 'off',
+      'obsidianmd/prefer-file-manager-trash-file': 'off',
+      'obsidianmd/prefer-instanceof': 'off',
+    },
+  },
 ]);

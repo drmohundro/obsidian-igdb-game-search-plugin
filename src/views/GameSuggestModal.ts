@@ -3,6 +3,7 @@ import { Game } from '../models/game.model';
 
 export class GameSuggestModal extends SuggestModal<Game> {
   showCoverImageInSearch: boolean;
+  private didChoose = false;
 
   constructor(
     app: App,
@@ -67,6 +68,17 @@ export class GameSuggestModal extends SuggestModal<Game> {
 
   // Perform action on the selected suggestion.
   onChooseSuggestion(game: Game) {
+    this.didChoose = true;
     this.onChoose(null, game);
+  }
+
+  onClose(): void {
+    super.onClose();
+    // Dismissed without a selection (e.g. Escape): signal cancellation so the awaiting
+    // promise resolves with no game instead of hanging forever.
+    if (!this.didChoose) {
+      this.didChoose = true;
+      this.onChoose(null, undefined);
+    }
   }
 }
