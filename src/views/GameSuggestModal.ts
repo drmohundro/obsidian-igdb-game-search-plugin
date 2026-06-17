@@ -76,9 +76,11 @@ export class GameSuggestModal extends SuggestModal<Game> {
     super.onClose();
     // Dismissed without a selection (e.g. Escape): signal cancellation so the awaiting
     // promise resolves with no game instead of hanging forever.
-    if (!this.didChoose) {
-      this.didChoose = true;
-      this.onChoose(null, undefined);
-    }
+    window.setTimeout(() => {
+      if (!this.didChoose) {
+        this.didChoose = true;
+        this.onChoose(null, undefined);
+      }
+    }, 0);
   }
 }

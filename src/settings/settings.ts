@@ -109,9 +109,10 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createFileNameFormatSetting(containerEl: HTMLElement): void {
-    const desc = activeDocument.createDocumentFragment();
-    desc.createDiv({
-      text: 'Available variables: {{name}}, {{developer}}, {{releaseYear}}, {{DATE}}',
+    const desc = createFragment(frag => {
+      frag.createDiv({
+        text: 'Available variables: {{name}}, {{developer}}, {{releaseYear}}, {{DATE}}',
+      });
     });
 
     new Setting(containerEl)
@@ -128,11 +129,12 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createTemplateFileSetting(containerEl: HTMLElement): void {
-    const desc = activeDocument.createDocumentFragment();
-    desc.createDiv({ text: 'Select a template file for new game notes.' });
-    desc.createEl('a', {
-      text: 'Template documentation',
-      href: 'https://github.com/drmohundro/obsidian-igdb-game-search-plugin#templates',
+    const desc = createFragment(frag => {
+      frag.createDiv({ text: 'Select a template file for new game notes.' });
+      frag.createEl('a', {
+        text: 'Template documentation',
+        href: 'https://github.com/drmohundro/obsidian-igdb-game-search-plugin#templates',
+      });
     });
 
     new Setting(containerEl)
@@ -154,18 +156,19 @@ export class GameSearchSettingTab extends PluginSettingTab {
   }
 
   private createApiDescription(containerEl: HTMLElement): void {
-    const desc = activeDocument.createDocumentFragment();
-    desc.createDiv({
-      text: 'To use this plugin, you need IGDB API credentials from Twitch',
+    const desc = createFragment(frag => {
+      frag.createDiv({
+        text: 'To use this plugin, you need IGDB API credentials from Twitch',
+      });
+      frag.createEl('br');
+      frag.createEl('a', {
+        text: '1. Go to twitch developer console.',
+        href: 'https://dev.twitch.tv/console',
+      });
+      frag.createEl('br');
+      frag.createDiv({ text: '2. Create a new application' });
+      frag.createDiv({ text: '3. Copy your client ID and generate a client secret' });
     });
-    desc.createEl('br');
-    desc.createEl('a', {
-      text: '1. Go to twitch developer console.',
-      href: 'https://dev.twitch.tv/console',
-    });
-    desc.createEl('br');
-    desc.createDiv({ text: '2. Create a new application' });
-    desc.createDiv({ text: '3. Copy your client ID and generate a client secret' });
 
     new Setting(containerEl).setName('Setup instructions').setDesc(desc);
   }
